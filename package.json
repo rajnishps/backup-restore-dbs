@@ -1,0 +1,21 @@
+{
+  "name": "backup-restore-dbs",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "backup": "bun run index.ts backup",
+    "restore": "bun run index.ts restore"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/prompts": "^2.4.9"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "execa": "^9.6.0",
+    "prompts": "^2.4.2"
+  }
+}
