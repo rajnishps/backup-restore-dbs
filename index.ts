@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { execa } from "execa"
-import fs from "fs"
+import fs, { createReadStream } from "fs"
 import path from "path"
 import prompts from "prompts"
 import { DB_URLS } from "./dbs"
@@ -86,10 +86,13 @@ async function restore() {
   // Step 4: Restore
   console.log(`📤 Restoring ${dumpFile} → ${targetDb}`)
   try {
+    const dumpStream = createReadStream(dumpFile)
+
     await execa("psql", [targetDb], {
-      input: fs.readFileSync(dumpFile, "utf8"),
-      stdio: "inherit",
+      stdin: dumpStream,
+      stdio: ["pipe", "inherit", "inherit"],
     })
+
     console.log("✅ Restore completed")
   } catch (err) {
     console.error("❌ Restore failed", err)
