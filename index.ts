@@ -4,6 +4,7 @@ import { execa } from "execa"
 import fs from "fs"
 import path from "path"
 import prompts from "prompts"
+import { DB_URLS } from "./dbs"
 
 const args = process.argv.slice(2)
 const command = args[0]
@@ -14,11 +15,6 @@ if (!fs.existsSync(BACKUP_DIR)) {
 }
 
 async function backup() {
-  const DB_URLS = [
-    "postgres://user:pass@host1:5432/db1",
-    "postgres://user:pass@host2:5432/db2",
-  ]
-
   const timestamp = new Date()
     .toISOString()
     .replace(/[-:T]/g, "_")
