@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { execa } from "execa"
-import fs, { createReadStream } from "fs"
+import fs from "fs"
 import path from "path"
 import prompts from "prompts"
 import { DB_URLS } from "./dbs"
@@ -83,14 +83,12 @@ async function restore() {
       val.startsWith("postgres://") ? true : "Must start with postgres://",
   })
 
-  // Step 4: Restore
+  // Step 4: Restore (no memory blowup)
   console.log(`📤 Restoring ${dumpFile} → ${targetDb}`)
   try {
-    const dumpStream = createReadStream(dumpFile)
-
-    await execa("psql", [targetDb], {
-      stdin: dumpStream,
-      stdio: ["pipe", "inherit", "inherit"],
+    await execa("psql", [targetDb, "-f", dumpFile], {
+      stdout: "inherit",
+      stderr: "inherit",
     })
 
     console.log("✅ Restore completed")
